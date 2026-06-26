@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Beacon - Smart School Ecosystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-lighter: #eff6ff;
+            --secondary: #0d9488;
+            --accent: #f97316;
+            --accent-light: #fed7aa;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+
+        .tab-btn:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card-badge.success {
+            background: #dcfce7;
+            color: var(--success);
+        }
+
+        .card-badge.danger {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        /* Stats Container */
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Attendance Section */
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card {
+            background: linear-gradient(135deg, var(--primary-lighter) 0%, #dbeafe 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .student-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-4px);
+        }
+
+        .student-card.absent {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        }
+
+        .student-card.present {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .student-details h4 {
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .student-details p {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .attendance-time {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .attendance-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0f766e;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            font-size: 0.95rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table thead {
+            background: var(--gray-100);
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        /* Status Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .badge-info {
+            background: var(--primary-lighter);
+            color: var(--primary);
+        }
+
+        /* Notification */
+        .notification {
+            background: white;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .notification.danger {
+            border-color: var(--danger);
+        }
+
+        .notification.danger .notification-icon {
+            color: var(--danger);
+        }
+
+        .notification.warning {
+            border-color: var(--warning);
+        }
+
+        .notification.warning .notification-icon {
+            color: var(--warning);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--gray-400);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--gray-600);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #065f46;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border: 1px solid #fecaca;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+
+        /* Status Indicator */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--gray-100);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.online {
+            background: var(--success);
+        }
+
+        .status-dot.offline {
+            background: var(--gray-400);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gray-200);
+        }
+
+        .timeline-item {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.25rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--gray-200);
+        }
+
+        .timeline-content {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .timeline-time {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        /* Progress Bar */
+        .progress {
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--secondary));
+            transition: width 0.4s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+                text-align: left;
+            }
+
+            .attendance-buttons {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        /* Utility */
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .text-center { text-align: center; }
+        .text-muted { color: var(--gray-500); }
+        .font-bold { font-weight: 600; }
+        .opacity-75 { opacity: 0.75; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🎓</div>
+                <span>School Beacon</span>
+            </div>
+            <div style="font-size: 0.9rem; opacity: 0.9;">Smart School Ecosystem</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('teacher')">👨‍🏫 Teacher Portal</button>
+            <button class="tab-btn" onclick="switchTab('parent')">👨‍👩‍👧 Parent Portal</button>
+            <button class="tab-btn" onclick="switchTab('admin')">⚙️ Admin Dashboard</button>
+        </div>
+
+        <!-- TEACHER PORTAL -->
+        <div id="teacher" class="tab-content active">
+            <!-- Teacher Dashboard Header -->
+            <div class="section-header mb-4">
+                <div class="grid grid-3">
+                    <div class="card text-center">
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Attendance Today</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Pending Reports</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Marking -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">📋 Mark Attendance</h2>
+                <p class="section-subtitle">Real-time student attendance with biometric verification</p>
+            </div>
+
+            <div class="card mb-4">
+                <div class="form-group">
+                    <label>Select Class</label>
+                    <select id="classSelect" onchange="updateAttendanceList()">
+                        <option value="">-- Choose Class --</option>
+                        <option value="10A">Grade 10 - Section A</option>
+                        <option value="10B">Grade 10 - Section B</option>
+                        <option value="11A">Grade 11 - Section A</option>
+                        <option value="12A">Grade 12 - Section A</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="attendance-grid" id="attendanceGrid">
+                <div class="student-card" data-student="1">
+                    <div class="student-info">
+                        <div class="student-avatar">AK</div>
+                        <div class="student-details">
+                            <h4>Amalka Kumara</h4>
+                            <p>ID: STU001</p>
+                        </div>
+                        <div class="card-badge success">🔒 Verified</div>
+                    </div>
+                    <div class="attendance-time">10:15 AM - Biometric</div>
+                    <div class="attendance-buttons">
+                        <button class="btn btn-success btn-sm btn-block" onclick="markAttendance(1, 'present')">✓ Present</button>
+                        <button class="btn btn-danger btn-sm btn-block" onclick="markAttendance(1, 'absent')">✗ Absent</button>
+                    </div>
+                </div>
+
+                <div class="student-card absent" data-student="2">
+                    <div class="student-info">
+                        <div class="student-avatar" style="background: #fee2e2; color: var(--danger);">RJ</div>
+                        <div class="student-details">
+                            <h4>Roshan Jayasena</h4>
+                            <p>ID: STU002</p>
+                        </div>
+                        <div class="card-badge danger">ABSENT</div>
+                    </div>
+                    <div class="attendance-time">Not marked</div>
+                    <div class="attendance-buttons">
+                        <button class="btn btn-success btn-sm btn-block" onclick="markAttendance(2, 'present')">✓ Present</button>
+                        <button class="btn btn-danger btn-sm btn-block" onclick="markAttendance(2, 'absent')">✗ Absent</button>
+                    </div>
+                </div>
+
+                <div class="student-card present" data-student="3">
+                    <div class="student-info">
+                        <div class="student-avatar" style="background: #dcfce7; color: var(--success);">NK</div>
+                        <div class="student-details">
+                            <h4>Nimal Karunarathne</h4>
+                            <p>ID: STU003</p>
+                        </div>
+                        <div class="card-badge success">✓ Present</div>
+                    </div>
+                    <div class="attendance-time">10:08 AM - Biometric</div>
+                    <div class="attendance-buttons">
+                        <button class="btn btn-success btn-sm btn-block" onclick="markAttendance(3, 'present')">✓ Present</button>
+                        <button class="btn btn-danger btn-sm btn-block" onclick="markAttendance(3, 'absent')">✗ Absent</button>
+                    </div>
+                </div>
+
+                <div class="student-card present" data-student="4">
+                    <div class="student-info">
+                        <div class="student-avatar" style="background: #dcfce7; color: var(--success);">SG</div>
+                        <div class="student-details">
+                            <h4>Samanthi Gunawardana</h4>
+                            <p>ID: STU004</p>
+                        </div>
+                        <div class="card-badge success">✓ Present</div>
+                    </div>
+                    <div class="attendance-time">10:05 AM - Biometric</div>
+                    <div class="attendance-buttons">
+                        <button class="btn btn-success btn-sm btn-block" onclick="markAttendance(4, 'present')">✓ Present</button>
+                        <button class="btn btn-danger btn-sm btn-block" onclick="markAttendance(4, 'absent')">✗ Absent</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mark Entry Section -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">📊 Enter Exam Marks</h2>
+                <p class="section-subtitle">Secure mark entry with anti-manipulation system</p>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Mathematics - Final Exam</h3>
+                        <div class="card-badge">Grade 10A</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Marks (Out of 100)</label>
+                        <input type="number" min="0" max="100" placeholder="Enter marks" id="mathMarks">
+                    </div>
+                    <div class="form-group">
+                        <label>Grade</label>
+                        <select id="mathGrade">
+                            <option value="A">A (90-100)</option>
+                            <option value="B">B (80-89)</option>
+                            <option value="C">C (70-79)</option>
+                            <option value="D">D (60-69)</option>
+                            <option value="E">E (Below 60)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="submitMarks('Math')">Submit Marks</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">English - Final Exam</h3>
+                        <div class="card-badge">Grade 10A</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Marks (Out of 100)</label>
+                        <input type="number" min="0" max="100" placeholder="Enter marks" id="engMarks">
+                    </div>
+                    <div class="form-group">
+                        <label>Grade</label>
+                        <select id="engGrade">
+                            <option value="A">A (90-100)</option>
+                            <option value="B">B (80-89)</option>
+                            <option value="C">C (70-79)</option>
+                            <option value="D">D (60-69)</option>
+                            <option value="E">E (Below 60)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="submitMarks('English')">Submit Marks</button>
+                </div>
+            </div>
+
+            <!-- Record Book -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">📖 Online Teacher Record Book</h2>
+                <p class="section-subtitle">Track lessons, assignments, and student progress</p>
+            </div>
+
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Lesson Topic</th>
+                            <th>Homework Given</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2026-06-25</td>
+                            <td>Quadratic Equations</td>
+                            <td>Exercise 5.1 - 15 questions</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="openModal('editLessonModal')">Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-24</td>
+                            <td>Linear Equations</td>
+                            <td>Exercise 4.5 - 20 questions</td>
+                            <td><span class="badge badge-success">Completed</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="openModal('editLessonModal')">Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td>2026-06-23</td>
+                            <td>Introduction to Algebra</td>
+                            <td>Practice problems 3.1</td>
+                            <td><span class="badge badge-warning">In Progress</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="openModal('editLessonModal')">Edit</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-secondary btn-lg mt-4" onclick="openModal('addLessonModal')" style="width: 100%;">+ Add New Lesson</button>
+            </div>
+        </div>
+
+        <!-- PARENT PORTAL -->
+        <div id="parent" class="tab-content">
+            <!-- Parent Dashboard Header -->
+            <div class="section-header mb-4">
+                <h2 class="section-title">Welcome Back, Mr. Jayasena! 👋</h2>
+                <p class="section-subtitle">Your children's learning journey at a glance</p>
+            </div>
+
+            <!-- Student Overview Cards -->
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📚 Amalka Kumara</h3>
+                        <span class="status-indicator">
+                            <span class="status-dot online"></span>
+                            In School
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-muted">ID: STU001 | Grade 10A</p>
+                        <div class="mt-2">
+                            <label style="font-size: 0.85rem;">Attendance This Month</label>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 94%;"></div>
+                            </div>
+                            <p style="font-size: 0.85rem; margin-top: 0.25rem;">94% (47/50 days)</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-2 mb-3">
+                        <div class="stat-box">
+                            <div style="font-size: 1.5rem; color: var(--primary); font-weight: 600;">8.5</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">GPA</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.5rem; color: var(--success); font-weight: 600;">5</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">Pending HW</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="openModal('studentDetailsModal')">View Full Report</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📚 Roshan Jayasena</h3>
+                        <span class="status-indicator">
+                            <span class="status-dot offline"></span>
+                            Not in School
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-muted">ID: STU002 | Grade 8B</p>
+                        <div class="mt-2">
+                            <label style="font-size: 0.85rem;">Attendance This Month</label>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 88%;"></div>
+                            </div>
+                            <p style="font-size: 0.85rem; margin-top: 0.25rem;">88% (44/50 days)</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-2 mb-3">
+                        <div class="stat-box">
+                            <div style="font-size: 1.5rem; color: var(--primary); font-weight: 600;">7.8</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">GPA</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size: 1.5rem; color: var(--warning); font-weight: 600;">8</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">Pending HW</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="openModal('studentDetailsModal')">View Full Report</button>
+                </div>
+            </div>
+
+            <!-- Attendance Alerts -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">⚠️ Recent Alerts & Notifications</h2>
+            </div>
+
+            <div class="notification danger">
+                <div class="notification-icon">❌</div>
+                <div style="flex: 1;">
+                    <strong>Absence Alert - Roshan Jayasena</strong>
+                    <p class="text-muted" style="margin-top: 0.25rem;">June 24, 2026 - Marked absent in 3rd period (English)</p>
+                </div>
+            </div>
+
+            <div class="notification warning">
+                <div class="notification-icon">⚡</div>
+                <div style="flex: 1;">
+                    <strong>Pending Homework - Amalka Kumara</strong>
+                    <p class="text-muted" style="margin-top: 0.25rem;">Mathematics: Exercise 5.1 due today</p>
+                </div>
+            </div>
+
+            <!-- School Communications -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">📢 School Announcements & Events</h2>
+                <p class="section-subtitle">Latest news and updates from school</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🎉 Annual Sports Day</h3>
+                        <div class="card-badge">Event</div>
+                    </div>
+                    <p style="margin-bottom: 1rem;">Join us for our annual sports day celebrations! Date: July 15, 2026</p>
+                    <div style="background: var(--accent-light); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <strong style="color: var(--accent);">Registration Open</strong>
+                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.25rem;">Sign your child up for various sports events</p>
+                    </div>
+                    <button class="btn btn-secondary btn-block">View Details</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🎓 Grade 11 Field Trip</h3>
+                        <div class="card-badge">Event</div>
+                    </div>
+                    <p style="margin-bottom: 1rem;">Educational field trip to National Museum. Destination: Colombo</p>
+                    <div style="background: var(--primary-lighter); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <strong style="color: var(--primary);">Confirmation Required</strong>
+                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.25rem;">Awaiting parent confirmation and fee payment</p>
+                    </div>
+                    <button class="btn btn-primary btn-block">Confirm Participation</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📅 Half-Year Exams Schedule</h3>
+                        <div class="card-badge">Notice</div>
+                    </div>
+                    <p style="margin-bottom: 1rem;">Half-yearly examinations commence from July 1, 2026</p>
+                    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <strong style="color: var(--warning);">Important Update</strong>
+                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.25rem;">Check exam timetable and prepare accordingly</p>
+                    </div>
+                    <button class="btn btn-warning btn-block">View Timetable</button>
+                </div>
+            </div>
+
+            <!-- Report Cards -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">📄 Report Cards</h2>
+            </div>
+
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Term</th>
+                            <th>GPA</th>
+                            <th>Rank</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Amalka Kumara</strong></td>
+                            <td>First Term 2026</td>
+                            <td><span class="badge badge-success">8.5/10</span></td>
+                            <td>5th in Grade</td>
+                            <td><button class="btn btn-sm btn-primary">⬇️ PDF</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Roshan Jayasena</strong></td>
+                            <td>First Term 2026</td>
+                            <td><span class="badge badge-success">7.8/10</span></td>
+                            <td>12th in Grade</td>
+                            <td><button class="btn btn-sm btn-primary">⬇️ PDF</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ADMIN DASHBOARD -->
+        <div id="admin" class="tab-content">
+            <!-- Admin Overview -->
+            <div class="section-header mb-4">
+                <h2 class="section-title">School Administration Dashboard</h2>
+                <p class="section-subtitle">Manage school operations, staff, and systems</p>
+            </div>
+
+            <div class="grid grid-4">
+                <div class="card text-center">
+                    <div class="stat-number" style="color: var(--primary);">1,245</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="card text-center">
+                    <div class="stat-number" style="color: var(--secondary);">87</div>
+                    <div class="stat-label">Total Teachers</div>
+                </div>
+                <div class="card text-center">
+                    <div class="stat-number" style="color: var(--warning);">23</div>
+                    <div class="stat-label">Absent Today</div>
+                </div>
+                <div class="card text-center">
+                    <div class="stat-number" style="color: var(--success);">98%</div>
+                    <div class="stat-label">System Uptime</div>
+                </div>
+            </div>
+
+            <!-- Attendance Overview -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">📊 Attendance Overview</h2>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3 class="card-title mb-3">Student Attendance by Grade</h3>
+                    <div class="mb-3">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Grade 10</span>
+                            <span style="font-weight: 600;">92%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 92%;"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Grade 11</span>
+                            <span style="font-weight: 600;">95%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Grade 12</span>
+                            <span style="font-weight: 600;">88%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title mb-3">Teacher Biometric Attendance</h3>
+                    <div class="grid grid-3 text-center">
+                        <div>
+                            <div style="font-size: 2rem; color: var(--success);">82</div>
+                            <p class="text-muted">Present</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; color: var(--warning);">4</div>
+                            <p class="text-muted">Late</p>
+                        </div>
+                        <div>
+                            <div style="font-size: 2rem; color: var(--danger);">1</div>
+                            <p class="text-muted">Absent</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block mt-3" onclick="openModal('teacherAttendanceModal')">View Details</button>
+                </div>
+            </div>
+
+            <!-- Teacher Management -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">👨‍🏫 Teacher Management & Relief Allocation</h2>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">AI-Powered Relief Teacher Recommendation</h3>
+                    <button class="btn btn-secondary btn-sm" onclick="openModal('reliefTeacherModal')">Allocate Relief</button>
+                </div>
+                
+                <div class="notification warning" style="margin-bottom: 1.5rem;">
+                    <div class="notification-icon">⚠️</div>
+                    <div style="flex: 1;">
+                        <strong>Relief Teacher Needed</strong>
+                        <p class="text-muted" style="margin-top: 0.25rem;">Mr. W.D. Silva (Mathematics) - Absent today. AI recommends: Mrs. Lakshmi (Available, qualified for Mathematics)</p>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Teacher Name</th>
+                            <th>Subject</th>
+                            <th>Today's Status</th>
+                            <th>Classes</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Mr. W.D. Silva</strong></td>
+                            <td>Mathematics</td>
+                            <td><span class="badge badge-danger">Absent</span></td>
+                            <td>4 Classes</td>
+                            <td><button class="btn btn-sm btn-warning" onclick="openModal('assignReliefModal')">🔄 Assign Relief</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mrs. Lakshmi</strong></td>
+                            <td>Mathematics</td>
+                            <td><span class="badge badge-success">Present</span></td>
+                            <td>3 Classes</td>
+                            <td><button class="btn btn-sm btn-primary">View Schedule</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Miss Priya</strong></td>
+                            <td>English</td>
+                            <td><span class="badge badge-success">Present</span></td>
+                            <td>5 Classes</td>
+                            <td><button class="btn btn-sm btn-primary">View Schedule</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mr. Ranil</strong></td>
+                            <td>Science</td>
+                            <td><span class="badge badge-warning">Late (15 min)</span></td>
+                            <td>4 Classes</td>
+                            <td><button class="btn btn-sm btn-primary">View Schedule</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Activity Timeline -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">⏰ System Activity Log</h2>
+            </div>
+
+            <div class="card">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-time">10:45 AM</div>
+                            <div class="timeline-title">Marks Submitted - Mathematics Exam</div>
+                            <div class="timeline-desc">Mrs. Lakshmi submitted marks for Grade 10A Mathematics exam (156 students)</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-time">10:20 AM</div>
+                            <div class="timeline-title">Attendance Locked</div>
+                            <div class="timeline-desc">Morning attendance marked and locked by Mr. Ranil (Grade 11A)</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-time">09:15 AM</div>
+                            <div class="timeline-title">Relief Teacher Assigned</div>
+                            <div class="timeline-desc">Mrs. Lakshmi assigned as relief teacher for Mr. W.D. Silva (Mathematics)</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-time">08:00 AM</div>
+                            <div class="timeline-title">Teacher Biometric Check-in</div>
+                            <div class="timeline-desc">87 teachers marked present via fingerprint authentication</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-time">06:30 PM (Yesterday)</div>
+                            <div class="timeline-title">Report Cards Generated</div>
+                            <div class="timeline-desc">Automated report card generation for Grade 10 (156 reports)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Settings -->
+            <div class="section-header mt-4">
+                <h2 class="section-title">⚙️ System Configuration</h2>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3 class="card-title mb-3">🔐 Security Settings</h3>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                            <input type="checkbox" checked> Enable Biometric Authentication
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                            <input type="checkbox" checked> Lock Attendance After Time
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                            <input type="checkbox" checked> Enable Audit Logs
+                        </label>
+                    </div>
+                    <button class="btn btn-primary btn-block">Save Settings</button>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title mb-3">📧 Notification Preferences</h3>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                            <input type="checkbox" checked> Send Absence Alerts
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                            <input type="checkbox" checked> Email Admins on Mark Entry
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+                            <input type="checkbox"> Daily Summary Report
+                        </label>
+                    </div>
+                    <button class="btn btn-primary btn-block">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    
+    <!-- Edit Lesson Modal -->
+    <div id="editLessonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Lesson Record</h2>
+                <button class="modal-close" onclick="closeModal('editLessonModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" value="2026-06-25">
+            </div>
+            <div class="form-group">
+                <label>Lesson Topic</label>
+                <input type="text" value="Quadratic Equations">
+            </div>
+            <div class="form-group">
+                <label>Homework Assigned</label>
+                <textarea rows="3">Exercise 5.1 - 15 questions</textarea>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select>
+                    <option selected>Completed</option>
+                    <option>In Progress</option>
+                    <option>Pending</option>
+                </select>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="showAlert('Lesson updated successfully!', 'success'); closeModal('editLessonModal')">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Add Lesson Modal -->
+    <div id="addLessonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Lesson</h2>
+                <button class="modal-close" onclick="closeModal('addLessonModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date">
+            </div>
+            <div class="form-group">
+                <label>Lesson Topic</label>
+                <input type="text" placeholder="Enter lesson topic">
+            </div>
+            <div class="form-group">
+                <label>Homework Assigned</label>
+                <textarea rows="3" placeholder="Enter homework details"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select>
+                    <option>Completed</option>
+                    <option>In Progress</option>
+                    <option selected>Pending</option>
+                </select>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="showAlert('Lesson added successfully!', 'success'); closeModal('addLessonModal')">Add Lesson</button>
+        </div>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div id="studentDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Student Performance Report</h2>
+                <button class="modal-close" onclick="closeModal('studentDetailsModal')">✕</button>
+            </div>
+            <div style="background: var(--primary-lighter); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Amalka Kumara</h3>
+                <p style="font-size: 0.9rem;">Grade 10A | ID: STU001</p>
+            </div>
+            <h4 style="margin-bottom: 1rem; font-weight: 600;">Recent Subjects Performance</h4>
+            <table class="table" style="margin-bottom: 1rem;">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Latest Mark</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mathematics</td>
+                        <td>92</td>
+                        <td><span class="badge badge-success">A</span></td>
+                    </tr>
+                    <tr>
+                        <td>English</td>
+                        <td>88</td>
+                        <td><span class="badge badge-success">B</span></td>
+                    </tr>
+                    <tr>
+                        <td>Science</td>
+                        <td>85</td>
+                        <td><span class="badge badge-success">B</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary btn-block" onclick="closeModal('studentDetailsModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Relief Teacher Modal -->
+    <div id="reliefTeacherModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Allocate Relief Teacher</h2>
+                <button class="modal-close" onclick="closeModal('reliefTeacherModal')">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Absent Teacher</label>
+                <select>
+                    <option>Mr. W.D. Silva (Mathematics)</option>
+                    <option>Another Teacher</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Recommended Relief Teachers (by AI)</label>
+                <div style="background: var(--primary-lighter); padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                    <strong style="color: var(--primary);">🎯 Mrs. Lakshmi (Mathematics)</strong>
+                    <p style="font-size: 0.85rem; color: var(--gray-600);">Available • Qualified • 15 years experience</p>
+                </div>
+                <div style="background: var(--gray-100); padding: 0.75rem; border-radius: 8px;">
+                    <strong style="color: var(--gray-700);">Mr. Kannan (Mathematics)</strong>
+                    <p style="font-size: 0.85rem; color: var(--gray-600);">Available • Qualified • 8 years experience</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" checked> Notify relief teacher automatically
+                </label>
+            </div>
+            <button class="btn btn-success btn-block" onclick="showAlert('Relief teacher allocated successfully!', 'success'); closeModal('reliefTeacherModal')">Allocate Relief Teacher</button>
+        </div>
+    </div>
+
+    <!-- Teacher Attendance Modal -->
+    <div id="teacherAttendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Teacher Biometric Attendance</h2>
+                <button class="modal-close" onclick="closeModal('teacherAttendanceModal')">✕</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Teacher Name</th>
+                        <th>Check-in Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mrs. Lakshmi</td>
+                        <td>8:02 AM</td>
+                        <td><span class="badge badge-success">On Time</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mr. Ranil</td>
+                        <td>8:15 AM</td>
+                        <td><span class="badge badge-warning">Late (15 min)</span></td>
+                    </tr>
+                    <tr>
+                        <td>Miss Priya</td>
+                        <td>7:58 AM</td>
+                        <td><span class="badge badge-success">On Time</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mr. W.D. Silva</td>
+                        <td>-</td>
+                        <td><span class="badge badge-danger">Absent</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 2000; max-width: 400px;">
+    </div>
+
+    <script>
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            // Activate button
+            event.target.classList.add('active');
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Click outside modal to close
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Alert Function
+        function showAlert(message, type = 'success') {
+            const container = document.getElementById('alertContainer');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertEl = document.createElement('div');
+            alertEl.id = alertId;
+            alertEl.className = `alert alert-${type} show`;
+            alertEl.innerHTML = `
+                <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                    <span style="font-size: 1.2rem;">${type === 'success' ? '✓' : '⚠'}</span>
+                    <div>
+                        <strong>${message}</strong>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(alertEl);
+            
+            setTimeout(() => {
+                if (document.getElementById(alertId)) {
+                    document.getElementById(alertId).remove();
+                }
+            }, 4000);
+        }
+
+        // Attendance Functions
+        function markAttendance(studentId, status) {
+            const card = document.querySelector(`[data-student="${studentId}"]`);
+            card.classList.remove('absent', 'present');
+            
+            if (status === 'present') {
+                card.classList.add('present');
+                showAlert(`Student marked present`, 'success');
+            } else {
+                card.classList.add('absent');
+                showAlert(`Student marked absent`, 'success');
+            }
+        }
+
+        function updateAttendanceList() {
+            const selected = document.getElementById('classSelect').value;
+            if (selected) {
+                showAlert(`Attendance list updated for ${selected}`, 'success');
+            }
+        }
+
+        // Marks Submission
+        function submitMarks(subject) {
+            const marks = document.getElementById(subject === 'Math' ? 'mathMarks' : 'engMarks').value;
+            const grade = document.getElementById(subject === 'Math' ? 'mathGrade' : 'engGrade').value;
+            
+            if (!marks) {
+                showAlert('Please enter marks', 'danger');
+                return;
+            }
+            
+            showAlert(`${subject} marks submitted: ${marks}/100 (Grade ${grade})`, 'success');
+            document.getElementById(subject === 'Math' ? 'mathMarks' : 'engMarks').value = '';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('School Beacon System Loaded');
+        });
+    </script>
+</body>
+</html>
